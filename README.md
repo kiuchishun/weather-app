@@ -1,75 +1,108 @@
-# React + TypeScript + Vite
+# Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+都市名から現在の天気を取得できるシンプルなフロントエンドアプリです。
+API連携や非同期処理、状態管理といった基礎を理解することを目的に作成しました。
 
-Currently, two official plugins are available:
+## URL
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+https://weather-app-azure-zeta-27.vercel.app/
 
-## React Compiler
+---
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## アプリ概要
 
-Note: This will impact Vite dev & build performances.
+* 都市名を入力して現在の天気を検索
+* 初期表示時に `Tokyo` の天気を自動取得
+* 気温、湿度、風速、天気アイコンを表示
+* ローディング中・エラー時の状態をUIに反映
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 工夫した点
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### コンポーネントごとの責務分離
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+処理を1箇所にまとめず、役割ごとに分割しました。
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* `SearchForm`：都市名の入力と送信
+* `StatusMessage`：ローディング・エラー表示
+* `WeatherCard`：天気情報の表示
+* `weather.ts`：API通信とデータ整形
+
+機能追加や修正の際に影響範囲を把握しやすい構成を意識しました。
+---
+
+### 非同期処理を前提としたUI設計
+
+API通信が発生するため、ユーザーの待ち時間を考慮し、
+
+* 通信中：ローディング表示
+* 失敗時：エラーメッセージ表示
+
+を行っています。
+
+---
+
+### APIレスポンスの整形
+
+外部APIのレスポンスをそのまま使用せず、必要なデータのみを抽出して扱っています。
+表示側がAPI仕様に強く依存しすぎないようにしました。
+
+---
+
+### 学習背景
+
+APIの扱いや非同期処理に慣れていなかったため、このアプリを通して基礎を整理しました。
+
+---
+
+## 使用技術
+
+* React
+* TypeScript
+* Vite
+* OpenWeatherMap API
+
+---
+
+## セットアップ
+
+### 1. 依存関係をインストール
+
+```
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. 環境変数を設定
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+`.env` に APIキーを設定してください。
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_OPENWEATHER_API_KEY=your_api_key
+```
+
+### 3. 開発サーバー起動
+
+```
+npm run dev
+```
+
+---
+
+## 実装機能
+
+* 都市名検索
+* 初期表示時の天気取得
+* 気温・湿度・風速・アイコン表示
+* ローディング状態の表示
+* エラーハンドリング
+
+---
+
+## 今後の改善点
+
+* 入力バリデーションの強化
+* 日本語入力や候補補完への対応
+* UIデザインの改善
+* 天気予報（複数日）の表示
+* テストコードの追加
