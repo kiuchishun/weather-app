@@ -14,6 +14,22 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
+  const fetchWeather = async (city: string) => {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || `HTTPエラー:${res.status}`);
+    }
+
+    return {
+      humidity: data.main.humidity,
+      temperature: Math.floor(data.main.temp),
+      windSpeed: data.wind.speed,
+      location: data.name,
+      icon: data.weather[0].icon,
+    };
+  };
   const search = async (city: string) => {
     try {
       setErrorMsg("");
@@ -21,24 +37,9 @@ const App = () => {
 
       setLoading(true);
 
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+      const data = await fetchWeather(city);
 
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`HTTPエラー:${res.status}`);
-      }
-      const data = await res.json();
-      if (data.cod !== 200) {
-        throw new Error(data.message || "天気情報を取得できませんでした");
-      }
-
-      setWeatherData({
-        humidity: data.main.humidity,
-        temperature: Math.floor(data.main.temp),
-        windSpeed: data.wind.speed,
-        location: data.name,
-        icon: data.weather[0].icon,
-      });
+      setWeatherData(data);
     } catch (err) {
       if (err instanceof Error) {
         setErrorMsg(err.message);
@@ -54,13 +55,13 @@ const App = () => {
     search("Tokyo");
   }, []);
   return (
-    <>
+    <div style={{ maxWidth: "640px", margin: "0 auto", padding: "24px 16px" }}>
       <h1>お天気アプリ</h1>
       <h3>英語で都市名を入力してください</h3>
       <SearchForm search={search} />
       <StatusMessage errorMsg={errorMsg} loading={loading} />
       {weatherData && <WeatherCard weatherData={weatherData} />}
-    </>
+    </div>
   );
 };
 export default App;
