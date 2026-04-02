@@ -29,7 +29,7 @@ https://weather-app-azure-zeta-27.vercel.app/
 * `WeatherCard`：天気情報の表示
 * `weather.ts`：API通信とデータ整形
 
-機能追加や修正の際に影響範囲を把握しやすい構成を意識しました。
+機能追加や修正時に影響範囲を把握しやすい構成を意識しました。
 ---
 
 ### 非同期処理を前提としたUI設計
