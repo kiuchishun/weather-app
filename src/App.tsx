@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SearchForm from "./components/SearchForm";
 import WeatherCard from "./components/WeatherCard";
 import StatusMessage from "./components/StatusMessage";
+import { fetchWeather } from "./api/weather";
 export type WeatherData = {
   humidity: number;
   temperature: number;
@@ -14,22 +15,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const fetchWeather = async (city: string) => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message || `HTTPエラー:${res.status}`);
-    }
-
-    return {
-      humidity: data.main.humidity,
-      temperature: Math.floor(data.main.temp),
-      windSpeed: data.wind.speed,
-      location: data.name,
-      icon: data.weather[0].icon,
-    };
-  };
+ 
   const search = async (city: string) => {
     try {
       setErrorMsg("");
