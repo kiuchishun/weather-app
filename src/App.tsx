@@ -15,7 +15,6 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
- 
   const search = async (city: string) => {
     try {
       setErrorMsg("");
