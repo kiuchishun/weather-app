@@ -6,7 +6,7 @@ type Props = {
 export default function ({ weatherData }: Props) {
   return (
     <div>
-      <h3>お天気情報：{weatherData.location}</h3>
+      <h3>現在のお天気情報：{weatherData.location}</h3>
       <p>気温 : {weatherData.temperature}℃</p>
       <p>湿度 : {weatherData.humidity}%</p>
       <p>風速 : {weatherData.windSpeed}m/s</p>
